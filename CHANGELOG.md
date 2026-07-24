@@ -1,5 +1,9 @@
 # Changelog
 
+## 1.1.3
+
+- Set Author to Comenium Consulting (https://www.comenium.info/).
+
 ## 1.1.2
 
 - Fixed the update checker: it was configured to require a manually

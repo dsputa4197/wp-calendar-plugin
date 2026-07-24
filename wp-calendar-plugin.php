@@ -2,8 +2,9 @@
 /**
  * Plugin Name: Google Calendar Schedule
  * Description: Renders an upcoming-events schedule from a public Google Calendar feed via the [calendar_schedule] shortcode.
- * Version: 1.1.2
- * Author: Daniel Sputa
+ * Version: 1.1.3
+ * Author: Comenium Consulting
+ * Author URI: https://www.comenium.info/
  * License: GPL-2.0-or-later
  * Text Domain: wp-calendar-plugin
  * GitHub Plugin URI: dsputa4197/wp-calendar-plugin
@@ -13,7 +14,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 	exit;
 }
 
-define( 'WCAL_VERSION', '1.1.2' );
+define( 'WCAL_VERSION', '1.1.3' );
 define( 'WCAL_PLUGIN_FILE', __FILE__ );
 define( 'WCAL_PLUGIN_DIR', plugin_dir_path( __FILE__ ) );
 define( 'WCAL_PLUGIN_URL', plugin_dir_url( __FILE__ ) );
