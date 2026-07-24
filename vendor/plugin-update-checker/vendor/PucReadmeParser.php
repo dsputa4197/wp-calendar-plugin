@@ -270,6 +270,15 @@ class PucReadmeParser {
 				'href' => array(),
 				'title' => array(),
 				'rel' => array()),
+			// Patched (not upstream): the default allowlist here strips <img>,
+			// which silently empties out a readme's "== Screenshots ==" section
+			// in the wp-admin "View version details" popup. Re-apply this if
+			// this vendored copy of plugin-update-checker is ever updated.
+			'img' => array(
+				'src' => array(),
+				'alt' => array(),
+				'width' => array(),
+				'height' => array()),
 			'blockquote' => array('cite' => array()),
 			'br' => array(),
 			'p' => array(),

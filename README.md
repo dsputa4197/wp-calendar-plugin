@@ -5,6 +5,17 @@ public Google Calendar as a styled, compact agenda widget — recurring
 weekly things (classes, meetings, a touring/rotating schedule, office
 hours, whatever), not a full month-grid calendar.
 
+## Screenshots
+
+Front-end widget (compact, month-grouped, "Show more" fold for anything
+beyond the first month):
+
+![Calendar widget on a live site](assets/images/calendar-view.png)
+
+Settings → Calendar Schedule:
+
+![Plugin settings page](assets/images/calendar-settings.png)
+
 ## Why not just embed Google Calendar?
 
 Google's own embed/widget code is functional but generic-looking and hard

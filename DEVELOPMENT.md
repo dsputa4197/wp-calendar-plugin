@@ -23,9 +23,14 @@ assets/css/schedule.css       Everything scoped under .wcal-schedule, using
                                colors (overridden inline per-site from the
                                admin color pickers via wp_add_inline_style).
 vendor/plugin-update-checker/ Vendored copy of YahnisElsts/plugin-update-checker
-                               (MIT). Not autoloaded via Composer on purpose —
-                               required directly so this works on plain
-                               shared hosting with no build step.
+                               (MIT), with one small local patch — see
+                               "readme.txt powers ..." below. Not autoloaded
+                               via Composer on purpose — required directly
+                               so this works on plain shared hosting with
+                               no build step.
+readme.txt                    WordPress.org-format readme. Powers the
+                               wp-admin "View version details" popup, not
+                               shown to end users otherwise — see below.
 ```
 
 ### Why no RRULE support in the ICS parser
@@ -105,6 +110,30 @@ verify against real calendar data — a full `wp-env`/PHPUnit setup would be
 overkill for a plugin this size, but is a reasonable thing to add if it
 grows.
 
+## readme.txt powers the "View version details" popup
+
+`readme.txt` (WordPress.org standard format) is what the wp-admin "View
+version x.y.z details" thickbox shows for this plugin, via the vendored
+`PucReadmeParser`. Two things to know if you touch it:
+
+- **No `== Changelog ==` section, on purpose.** `Puc/v5p7/Vcs/PluginUpdateChecker.php`
+  only falls back to reading `CHANGELOG.md` when `readme.txt`'s own
+  changelog section is empty. Adding one here would take priority and
+  replace the (better, already-working) `CHANGELOG.md`-sourced tab with
+  whatever's duplicated into readme.txt. Keep `CHANGELOG.md` as the single
+  source of truth for that tab.
+- **Screenshots need a small vendor patch to survive.** `PucReadmeParser::filter_text()`
+  runs every section through `wp_kses()` with an allowlist that doesn't
+  include `<img>` by default — so markdown images in `== Screenshots ==`
+  would otherwise render to `<img>` via Parsedown and then get silently
+  stripped right back out. `vendor/plugin-update-checker/vendor/PucReadmeParser.php`
+  has `img` (with `src`/`alt`/`width`/`height`) added to that allowlist,
+  marked as a patch. **Re-apply this if the vendored library is ever
+  updated to a newer release** — it's not part of upstream. Screenshot
+  images are referenced by their full `raw.githubusercontent.com` URL
+  (relative paths won't resolve, since the popup isn't rendered relative
+  to the plugin's own folder).
+
 ## Releasing an update
 
 Updates ship via [GitHub Releases](https://github.com/YahnisElsts/plugin-update-checker#github-integration),
@@ -113,7 +142,7 @@ plugin will see a normal wp-admin "Update available" notice once a release
 is published — no separate update server needed.
 
 1. Bump `Version:` in the `wp-calendar-plugin.php` header (and `WCAL_VERSION`
-   just below it — keep them in sync).
+   just below it, and `Stable tag:` in `readme.txt` — keep all three in sync).
 2. Note the change in [CHANGELOG.md](CHANGELOG.md).
 3. Commit, then tag and push:
    ```bash

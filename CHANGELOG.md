@@ -1,5 +1,14 @@
 # Changelog
 
+## 1.2.1
+
+- Added `readme.txt` (WordPress.org format), which fills out the wp-admin
+  "View version details" popup with a fuller description, an FAQ, and two
+  screenshots — previously that popup only showed the one-line plugin
+  header description.
+- Patched the vendored readme parser's HTML allowlist to permit `<img>` —
+  it was silently stripping any screenshots out of that popup.
+
 ## 1.2.0
 
 - New settings: Font (system/web-safe font list, applies to all widget
