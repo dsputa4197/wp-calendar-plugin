@@ -81,6 +81,10 @@ All of this lives under **Settings → Calendar Schedule**:
 - **Second language for month names** — None / Czech / Spanish / Polish /
   Vietnamese. Renders month dividers like "Září · September" instead of
   just "September".
+- **Font** — a fixed list of system/web-safe fonts (no external font files
+  to load). Applies to all text in the widget.
+- **Text color** — event titles and addresses. A muted secondary tone is
+  derived automatically for less prominent text (month labels, addresses).
 - **Accent color** / **Heading color** — restyle without touching CSS. The
   pale "wash" background behind the time pill is derived automatically from
   the accent color.

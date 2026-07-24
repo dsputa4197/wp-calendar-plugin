@@ -1,10 +1,10 @@
 /*
- * Colors are pulled straight from czechchurch.org's own computed styles
- * (body text, nav-link magenta, H2 magenta). The site has no dark mode of
- * its own, so this deliberately stays a single fixed light theme rather
- * than switching on prefers-color-scheme — a dark card would clash with
- * the rest of an always-light page. Override these custom properties from
- * Avada's "Additional CSS" if the palette ever needs to move.
+ * These custom properties are the plugin's fallback defaults (originally
+ * measured from one real site) — every one of them is overridden inline,
+ * per-site, from Settings → Calendar Schedule (colors, text color, font)
+ * via wp_add_inline_style() in wp-calendar-plugin.php. Only relied upon
+ * as-is if those settings are left blank. The widget has no dark mode of
+ * its own by design — see DEVELOPMENT.md.
  */
 .wcal-schedule {
 	--wcal-ink: #595959;
@@ -15,12 +15,13 @@
 	--wcal-paper: #ffffff;
 	--wcal-line: #e7e3e4;
 	--wcal-line-strong: #d9d2d4;
+	--wcal-font-family: Verdana, Geneva, sans-serif;
 
 	box-sizing: border-box;
 	background: var( --wcal-paper );
 	border: 1px solid var( --wcal-line );
 	color: var( --wcal-ink );
-	font-family: Verdana, Geneva, sans-serif;
+	font-family: var( --wcal-font-family );
 	font-variant-numeric: tabular-nums;
 	max-width: 100%;
 }

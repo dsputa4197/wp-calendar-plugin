@@ -1,5 +1,12 @@
 # Changelog
 
+## 1.2.0
+
+- New settings: Font (system/web-safe font list, applies to all widget
+  text) and Text color (with an automatically-derived muted tone for
+  secondary text). Both follow the same pattern as the existing accent
+  color settings.
+
 ## 1.1.3
 
 - Set Author to Comenium Consulting (https://www.comenium.info/).

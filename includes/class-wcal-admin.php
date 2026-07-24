@@ -8,6 +8,22 @@ class WCAL_Admin {
 	const OPTION_GROUP = 'wcal_settings';
 	const PAGE_SLUG    = 'wcal-settings';
 
+	/**
+	 * A curated allowlist rather than a free-text field — arbitrary font
+	 * names would either silently fail (font not installed anywhere) or, if
+	 * ever changed to accept raw CSS, be an injection risk. These are all
+	 * either system fonts or long-standing web-safe fonts, so every one of
+	 * them renders correctly with zero extra requests (no font files to load).
+	 */
+	const FONT_STACKS = array(
+		'verdana' => 'Verdana, Geneva, sans-serif',
+		'system'  => '-apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif',
+		'arial'   => 'Arial, Helvetica, sans-serif',
+		'georgia' => 'Georgia, "Times New Roman", serif',
+		'times'   => '"Times New Roman", Times, serif',
+		'mono'    => '"Courier New", Courier, monospace',
+	);
+
 	public static function init() {
 		add_action( 'admin_menu', array( __CLASS__, 'add_menu' ) );
 		add_action( 'admin_init', array( __CLASS__, 'register_settings' ) );
@@ -79,6 +95,14 @@ class WCAL_Admin {
 			'sanitize_callback' => array( __CLASS__, 'sanitize_color_or_empty' ),
 			'default'           => '#ba3f9d',
 		) );
+		register_setting( self::OPTION_GROUP, 'wcal_ink_color', array(
+			'sanitize_callback' => array( __CLASS__, 'sanitize_color_or_empty' ),
+			'default'           => '#595959',
+		) );
+		register_setting( self::OPTION_GROUP, 'wcal_font_family', array(
+			'sanitize_callback' => array( __CLASS__, 'sanitize_font_family' ),
+			'default'           => 'verdana',
+		) );
 	}
 
 	public static function sanitize_positive_int( $value ) {
@@ -94,6 +118,10 @@ class WCAL_Admin {
 	public static function sanitize_color_or_empty( $value ) {
 		$value = sanitize_hex_color( $value );
 		return $value ? $value : '';
+	}
+
+	public static function sanitize_font_family( $value ) {
+		return array_key_exists( $value, self::FONT_STACKS ) ? $value : 'verdana';
 	}
 
 	public static function handle_refresh_now() {
@@ -119,6 +147,15 @@ class WCAL_Admin {
 			'es'   => __( 'Spanish', 'wp-calendar-plugin' ),
 			'pl'   => __( 'Polish', 'wp-calendar-plugin' ),
 			'vi'   => __( 'Vietnamese', 'wp-calendar-plugin' ),
+		);
+		$font_family = get_option( 'wcal_font_family', 'verdana' );
+		$font_labels = array(
+			'verdana' => __( 'Verdana (default)', 'wp-calendar-plugin' ),
+			'system'  => __( 'System UI (matches most modern devices)', 'wp-calendar-plugin' ),
+			'arial'   => __( 'Arial / Helvetica', 'wp-calendar-plugin' ),
+			'georgia' => __( 'Georgia (serif)', 'wp-calendar-plugin' ),
+			'times'   => __( 'Times New Roman (serif)', 'wp-calendar-plugin' ),
+			'mono'    => __( 'Courier New (monospace)', 'wp-calendar-plugin' ),
 		);
 		?>
 		<div class="wrap">
@@ -181,6 +218,24 @@ class WCAL_Admin {
 								<?php endforeach; ?>
 							</select>
 							<p class="description"><?php esc_html_e( 'Shows month headers like "Září · September" instead of just "September".', 'wp-calendar-plugin' ); ?></p>
+						</td>
+					</tr>
+					<tr>
+						<th scope="row"><label for="wcal_font_family"><?php esc_html_e( 'Font', 'wp-calendar-plugin' ); ?></label></th>
+						<td>
+							<select id="wcal_font_family" name="wcal_font_family">
+								<?php foreach ( $font_labels as $code => $label ) : ?>
+									<option value="<?php echo esc_attr( $code ); ?>" <?php selected( $font_family, $code ); ?>><?php echo esc_html( $label ); ?></option>
+								<?php endforeach; ?>
+							</select>
+							<p class="description"><?php esc_html_e( 'Applies to all text in the widget. A fixed list of system/web-safe fonts, so nothing extra has to load.', 'wp-calendar-plugin' ); ?></p>
+						</td>
+					</tr>
+					<tr>
+						<th scope="row"><label for="wcal_ink_color"><?php esc_html_e( 'Text color', 'wp-calendar-plugin' ); ?></label></th>
+						<td>
+							<input type="text" id="wcal_ink_color" name="wcal_ink_color" class="wcal-color-field" value="<?php echo esc_attr( get_option( 'wcal_ink_color', '#595959' ) ); ?>" data-default-color="#595959" />
+							<p class="description"><?php esc_html_e( 'Used for event titles and addresses. A lighter, muted version is derived automatically for secondary text.', 'wp-calendar-plugin' ); ?></p>
 						</td>
 					</tr>
 					<tr>

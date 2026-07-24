@@ -2,7 +2,7 @@
 /**
  * Plugin Name: Google Calendar Schedule
  * Description: Renders an upcoming-events schedule from a public Google Calendar feed via the [calendar_schedule] shortcode.
- * Version: 1.1.3
+ * Version: 1.2.0
  * Author: Comenium Consulting
  * Author URI: https://www.comenium.info/
  * License: GPL-2.0-or-later
@@ -14,7 +14,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 	exit;
 }
 
-define( 'WCAL_VERSION', '1.1.3' );
+define( 'WCAL_VERSION', '1.2.0' );
 define( 'WCAL_PLUGIN_FILE', __FILE__ );
 define( 'WCAL_PLUGIN_DIR', plugin_dir_path( __FILE__ ) );
 define( 'WCAL_PLUGIN_URL', plugin_dir_url( __FILE__ ) );
@@ -105,14 +105,23 @@ function wcal_register_assets() {
 
 	$accent   = sanitize_hex_color( get_option( 'wcal_accent_color', '#9b0177' ) );
 	$accent_2 = sanitize_hex_color( get_option( 'wcal_accent_color_2', '#ba3f9d' ) );
+	$ink      = sanitize_hex_color( get_option( 'wcal_ink_color', '#595959' ) );
+	$font_key = get_option( 'wcal_font_family', 'verdana' );
+	$font     = isset( WCAL_Admin::FONT_STACKS[ $font_key ] ) ? WCAL_Admin::FONT_STACKS[ $font_key ] : '';
 
-	if ( $accent || $accent_2 ) {
+	if ( $accent || $accent_2 || $ink || $font ) {
 		$css = '.wcal-schedule{';
 		if ( $accent ) {
 			$css .= '--wcal-accent:' . $accent . ';--wcal-accent-wash:' . wcal_tint_hex_color( $accent, 0.92 ) . ';';
 		}
 		if ( $accent_2 ) {
 			$css .= '--wcal-accent-2:' . $accent_2 . ';';
+		}
+		if ( $ink ) {
+			$css .= '--wcal-ink:' . $ink . ';--wcal-ink-soft:' . wcal_tint_hex_color( $ink, 0.45 ) . ';';
+		}
+		if ( $font ) {
+			$css .= '--wcal-font-family:' . $font . ';';
 		}
 		$css .= '}';
 		wp_add_inline_style( 'wcal-schedule', $css );
