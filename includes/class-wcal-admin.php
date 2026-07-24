@@ -6,7 +6,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 class WCAL_Admin {
 
 	const OPTION_GROUP = 'wcal_settings';
-	const PAGE_SLUG    = 'wcal-mass-schedule';
+	const PAGE_SLUG    = 'wcal-settings';
 
 	public static function init() {
 		add_action( 'admin_menu', array( __CLASS__, 'add_menu' ) );
@@ -17,8 +17,8 @@ class WCAL_Admin {
 
 	public static function add_menu() {
 		add_options_page(
-			__( 'Mass Schedule', 'wp-calendar-plugin' ),
-			__( 'Mass Schedule', 'wp-calendar-plugin' ),
+			__( 'Google Calendar Schedule', 'wp-calendar-plugin' ),
+			__( 'Calendar Schedule', 'wp-calendar-plugin' ),
 			'manage_options',
 			self::PAGE_SLUG,
 			array( __CLASS__, 'render_page' )
@@ -45,11 +45,11 @@ class WCAL_Admin {
 		) );
 		register_setting( self::OPTION_GROUP, 'wcal_event_label_singular', array(
 			'sanitize_callback' => 'sanitize_text_field',
-			'default'           => 'Mass',
+			'default'           => 'Event',
 		) );
 		register_setting( self::OPTION_GROUP, 'wcal_event_label_plural', array(
 			'sanitize_callback' => 'sanitize_text_field',
-			'default'           => 'Masses',
+			'default'           => 'Events',
 		) );
 		register_setting( self::OPTION_GROUP, 'wcal_cache_hours', array(
 			'sanitize_callback' => array( __CLASS__, 'sanitize_positive_int' ),
@@ -122,7 +122,7 @@ class WCAL_Admin {
 		);
 		?>
 		<div class="wrap">
-			<h1><?php esc_html_e( 'Mass Schedule', 'wp-calendar-plugin' ); ?></h1>
+			<h1><?php esc_html_e( 'Google Calendar Schedule', 'wp-calendar-plugin' ); ?></h1>
 
 			<?php if ( isset( $_GET['wcal_refreshed'] ) ) : ?>
 				<div class="notice notice-success is-dismissible">
@@ -132,11 +132,11 @@ class WCAL_Admin {
 
 			<p>
 				<?php esc_html_e( 'Use the shortcode below wherever you want the schedule to appear:', 'wp-calendar-plugin' ); ?>
-				<code>[mass_schedule]</code>
+				<code>[calendar_schedule]</code>
 			</p>
 			<p class="description">
 				<?php esc_html_e( 'To show a second calendar somewhere else on the site, add an ics_url attribute, e.g.', 'wp-calendar-plugin' ); ?>
-				<code>[mass_schedule ics_url="https://calendar.google.com/.../basic.ics"]</code>
+				<code>[calendar_schedule ics_url="https://calendar.google.com/.../basic.ics"]</code>
 			</p>
 
 			<form method="post" action="options.php">
@@ -161,15 +161,15 @@ class WCAL_Admin {
 					<tr>
 						<th scope="row"><label for="wcal_event_label_singular"><?php esc_html_e( 'Event noun (singular)', 'wp-calendar-plugin' ); ?></label></th>
 						<td>
-							<input type="text" id="wcal_event_label_singular" name="wcal_event_label_singular" class="regular-text" value="<?php echo esc_attr( get_option( 'wcal_event_label_singular', 'Mass' ) ); ?>" placeholder="Mass" />
-							<p class="description"><?php esc_html_e( 'Used for the "Next ..." flag on the soonest date, e.g. "Next Mass" or "Next Class". Leave blank to hide that flag.', 'wp-calendar-plugin' ); ?></p>
+							<input type="text" id="wcal_event_label_singular" name="wcal_event_label_singular" class="regular-text" value="<?php echo esc_attr( get_option( 'wcal_event_label_singular', 'Event' ) ); ?>" placeholder="Event" />
+							<p class="description"><?php esc_html_e( 'Used for the "Next ..." flag on the soonest date, e.g. "Next Event", "Next Class", or "Next Meeting". Leave blank to hide that flag.', 'wp-calendar-plugin' ); ?></p>
 						</td>
 					</tr>
 					<tr>
 						<th scope="row"><label for="wcal_event_label_plural"><?php esc_html_e( 'Event noun (plural)', 'wp-calendar-plugin' ); ?></label></th>
 						<td>
-							<input type="text" id="wcal_event_label_plural" name="wcal_event_label_plural" class="regular-text" value="<?php echo esc_attr( get_option( 'wcal_event_label_plural', 'Masses' ) ); ?>" placeholder="Masses" />
-							<p class="description"><?php esc_html_e( 'Used in "Show 3 more ..." and the empty-schedule message, e.g. "Masses" or "Classes".', 'wp-calendar-plugin' ); ?></p>
+							<input type="text" id="wcal_event_label_plural" name="wcal_event_label_plural" class="regular-text" value="<?php echo esc_attr( get_option( 'wcal_event_label_plural', 'Events' ) ); ?>" placeholder="Events" />
+							<p class="description"><?php esc_html_e( 'Used in "Show 3 more ..." and the empty-schedule message, e.g. "Events", "Classes", or "Meetings".', 'wp-calendar-plugin' ); ?></p>
 						</td>
 					</tr>
 					<tr>

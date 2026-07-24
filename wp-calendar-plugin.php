@@ -1,9 +1,9 @@
 <?php
 /**
- * Plugin Name: Mass Schedule (Google Calendar)
- * Description: Displays an upcoming Mass schedule pulled from a public Google Calendar feed, via the [mass_schedule] shortcode.
- * Version: 1.1.0
- * Author: Czech Catholic Mission in California
+ * Plugin Name: Google Calendar Schedule
+ * Description: Renders an upcoming-events schedule from a public Google Calendar feed via the [calendar_schedule] shortcode.
+ * Version: 1.1.1
+ * Author: Daniel Sputa
  * License: GPL-2.0-or-later
  * Text Domain: wp-calendar-plugin
  * GitHub Plugin URI: dsputa4197/wp-calendar-plugin
@@ -13,11 +13,11 @@ if ( ! defined( 'ABSPATH' ) ) {
 	exit;
 }
 
-define( 'WCAL_VERSION', '1.1.0' );
+define( 'WCAL_VERSION', '1.1.1' );
 define( 'WCAL_PLUGIN_FILE', __FILE__ );
 define( 'WCAL_PLUGIN_DIR', plugin_dir_path( __FILE__ ) );
 define( 'WCAL_PLUGIN_URL', plugin_dir_url( __FILE__ ) );
-define( 'WCAL_TRANSIENT_KEY', 'wcal_mass_events' );
+define( 'WCAL_TRANSIENT_KEY', 'wcal_events' );
 define( 'WCAL_FALLBACK_OPTION', 'wcal_events_fallback' );
 
 require_once WCAL_PLUGIN_DIR . 'vendor/plugin-update-checker/plugin-update-checker.php';
@@ -42,10 +42,10 @@ function wcal_init_update_checker() {
 add_action( 'plugins_loaded', 'wcal_init_update_checker' );
 
 /**
- * No parish-specific defaults here on purpose — this plugin is public, so a
+ * No site-specific defaults here on purpose — this plugin is public, so a
  * stranger's first activation should start empty rather than silently
- * pulling this site's calendar. wcal_maybe_upgrade() below is what keeps
- * *this* site's existing configuration intact across updates.
+ * pulling someone else's calendar. wcal_maybe_upgrade() below is what keeps
+ * an already-configured site's settings intact across updates.
  */
 function wcal_activate() {
 	add_option( 'wcal_ics_url', '' );
@@ -78,8 +78,9 @@ function wcal_maybe_upgrade() {
 	$is_existing_install = false !== get_option( 'wcal_ics_url', false );
 
 	if ( $is_existing_install ) {
-		// This site was already showing bilingual Czech/English month names
-		// (it was hardcoded pre-1.1.0); keep that behavior by default.
+		// Sites that were already active before the second-language month
+		// setting existed defaulted to a bilingual Czech/English label; keep
+		// that behavior rather than silently switching them to English-only.
 		add_option( 'wcal_month_language', 'cs' );
 	}
 

@@ -5,9 +5,9 @@
  * @var string $subscribe_url        webcal:// link to the source calendar, or ''.
  * @var int    $initial_months       Month buckets to render expanded before the rest fold behind "Show more".
  * @var int    $hidden_event_count   Events inside the folded months.
- * @var string $next_label           e.g. "Next Mass" — shown on the soonest event.
- * @var string $empty_label          e.g. "Masses" — used in the empty/not-scheduled state.
- * @var string $show_more_label_tpl  sprintf template with one %d, e.g. "Show %d more Masses".
+ * @var string $next_label           e.g. "Next Event" — shown on the soonest event.
+ * @var string $empty_label          e.g. "Events" — used in the empty/not-scheduled state.
+ * @var string $show_more_label_tpl  sprintf template with one %d, e.g. "Show %d more Events".
  */
 if ( ! defined( 'ABSPATH' ) ) {
 	exit;
@@ -64,7 +64,7 @@ $render_month = static function ( array $month, &$flagged_next ) use ( $next_lab
 		<p class="wcal-empty">
 			<?php
 			printf(
-				/* translators: %s: plural event noun, e.g. "Masses" */
+				/* translators: %s: plural event noun, e.g. "Events" */
 				esc_html__( 'No upcoming %s are scheduled right now — please check back soon.', 'wp-calendar-plugin' ),
 				esc_html( $empty_label )
 			);

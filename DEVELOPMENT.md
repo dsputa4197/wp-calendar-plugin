@@ -10,9 +10,10 @@ includes/
                                dependencies except wp_timezone().
   class-wcal-feed.php         wp_remote_get + transient cache + a
                                last-known-good fallback stored in wp_options.
-  class-wcal-shortcode.php    [mass_schedule]: resolves atts, filters/sorts
-                               events, groups by month, applies filters.
-  class-wcal-admin.php        Settings → Mass Schedule (Settings API).
+  class-wcal-shortcode.php    [calendar_schedule] (and the legacy
+                               [mass_schedule] alias): resolves atts,
+                               filters/sorts events, groups by month.
+  class-wcal-admin.php        Settings → Calendar Schedule (Settings API).
 templates/schedule.php        The only file that outputs HTML. Renders the
                                month/timeline markup via a closure so the
                                same code runs both above and inside the
@@ -32,10 +33,10 @@ vendor/plugin-update-checker/ Vendored copy of YahnisElsts/plugin-update-checker
 Google Calendar can export events either as one `VEVENT` per occurrence, or
 as a single `VEVENT` + `RRULE` for a true recurring series. This plugin only
 handles the former. That's a deliberate scope cut, not an oversight: a
-schedule that rotates between several locations (the motivating use case)
-can't be expressed as a single RRULE anyway — it's naturally one event per
-occurrence. If you need RRULE expansion, it'd belong in
-`WCAL_ICS_Parser::parse()`; nothing else in the codebase assumes
+schedule that rotates between several locations can't be expressed as a
+single RRULE anyway — it's naturally one event per occurrence, which is the
+case this plugin was built around. If you need RRULE expansion, it'd belong
+in `WCAL_ICS_Parser::parse()`; nothing else in the codebase assumes
 one-event-per-occurrence, so it's an additive change.
 
 ### Caching model
@@ -51,6 +52,18 @@ one-event-per-occurrence, so it's an additive change.
   produced zero events — treated as a transient hiccup rather than a truly
   empty calendar), it serves the last successful parse from the fallback
   `wp_option` instead of showing nothing.
+
+### The `ics_url` shortcode override is host-restricted on purpose
+
+`WCAL_Shortcode::sanitize_calendar_override_url()` only accepts
+`calendar.google.com` (and subdomains) for the per-shortcode `ics_url`
+attribute. Shortcode attributes aren't capability-checked when WordPress
+renders them — anyone who can publish a post (not just admins) can set one
+— so without that restriction, `ics_url` would let a low-privileged author
+make the server issue an HTTP request to any URL they choose (SSRF). The
+site-wide default in Settings isn't restricted this way, since only an
+admin (`manage_options`) can set it. Don't relax this check without also
+addressing that.
 
 ## Hooks
 

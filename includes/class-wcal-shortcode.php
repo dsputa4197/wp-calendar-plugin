@@ -6,28 +6,29 @@ if ( ! defined( 'ABSPATH' ) ) {
 class WCAL_Shortcode {
 
 	public static function init() {
+		add_shortcode( 'calendar_schedule', array( __CLASS__, 'render' ) );
+		// Kept working for sites already using the plugin's original tag name.
 		add_shortcode( 'mass_schedule', array( __CLASS__, 'render' ) );
 	}
 
-	public static function render( $atts ) {
+	public static function render( $atts, $content = '', $tag = 'calendar_schedule' ) {
 		$atts = shortcode_atts(
 			array(
 				'months'         => get_option( 'wcal_months_ahead', 6 ),
 				'limit'          => get_option( 'wcal_max_events', 40 ),
-				'title'          => get_option( 'wcal_heading', 'Mass Schedule' ),
+				'title'          => get_option( 'wcal_heading', 'Upcoming Events' ),
 				'initial_months' => get_option( 'wcal_initial_months', 1 ),
 				// Lets one page show a second, different calendar alongside the
 				// site-wide default configured in Settings, e.g.
-				// [mass_schedule ics_url="https://calendar.google.com/.../basic.ics"].
+				// [calendar_schedule ics_url="https://calendar.google.com/.../basic.ics"].
 				'ics_url'        => '',
 			),
 			$atts,
-			'mass_schedule'
+			$tag
 		);
 
-		$ics_url = '' !== trim( (string) $atts['ics_url'] )
-			? esc_url_raw( trim( (string) $atts['ics_url'] ) )
-			: trim( (string) get_option( 'wcal_ics_url', '' ) );
+		$override_url = self::sanitize_calendar_override_url( $atts['ics_url'] );
+		$ics_url      = '' !== $override_url ? $override_url : trim( (string) get_option( 'wcal_ics_url', '' ) );
 
 		if ( '' === $ics_url ) {
 			ob_start();
@@ -74,19 +75,19 @@ class WCAL_Shortcode {
 			$hidden_event_count += count( $hidden_month['events'] );
 		}
 
-		// Not every calendar this plugin renders is a Mass schedule, so the
-		// noun used in "Next Mass" / "Show 3 more Masses" is configurable.
-		// Leaving the singular blank hides the "Next ..." flag entirely.
-		$singular = trim( (string) get_option( 'wcal_event_label_singular', 'Mass' ) );
-		$plural   = trim( (string) get_option( 'wcal_event_label_plural', 'Masses' ) );
+		// The noun used in "Next Event" / "Show 3 more Events" is configurable
+		// since this might be a class schedule, meeting series, etc., not just
+		// a generic "event". Leaving the singular blank hides the "Next ..." flag.
+		$singular = trim( (string) get_option( 'wcal_event_label_singular', 'Event' ) );
+		$plural   = trim( (string) get_option( 'wcal_event_label_plural', 'Events' ) );
 		$plural   = '' !== $plural ? $plural : 'events';
 
 		$next_label = '' !== $singular
-			/* translators: %s: singular event noun, e.g. "Mass" */
+			/* translators: %s: singular event noun, e.g. "Event" */
 			? sprintf( __( 'Next %s', 'wp-calendar-plugin' ), $singular )
 			: '';
 		$empty_label = $plural;
-		/* translators: %s: plural event noun, e.g. "Masses" — the %%d becomes a literal %d for a later sprintf() with the count */
+		/* translators: %s: plural event noun, e.g. "Events" — the %%d becomes a literal %d for a later sprintf() with the count */
 		$show_more_label_tpl = sprintf( __( 'Show %%d more %s', 'wp-calendar-plugin' ), $plural );
 
 		ob_start();
@@ -110,12 +111,45 @@ class WCAL_Shortcode {
 				printf(
 					/* translators: %s: link to the plugin's settings page */
 					esc_html__( 'No calendar is configured yet. %s', 'wp-calendar-plugin' ),
-					'<a href="' . esc_url( admin_url( 'options-general.php?page=wcal-mass-schedule' ) ) . '">' . esc_html__( 'Add your Google Calendar link.', 'wp-calendar-plugin' ) . '</a>'
+					'<a href="' . esc_url( admin_url( 'options-general.php?page=' . WCAL_Admin::PAGE_SLUG ) ) . '">' . esc_html__( 'Add your Google Calendar link.', 'wp-calendar-plugin' ) . '</a>'
 				);
 				?>
 			</p>
 		</div>
 		<?php
+	}
+
+	/**
+	 * Only a public Google Calendar .ics URL is accepted for the per-shortcode
+	 * `ics_url` override. Shortcode attributes aren't capability-checked at
+	 * render time (anyone who can publish a post can set one), so without this
+	 * restriction that attribute would let a low-privileged author make the
+	 * server fetch an arbitrary URL of their choosing (SSRF). The site-wide
+	 * default in Settings isn't restricted this way since only an admin
+	 * (manage_options) can set it.
+	 *
+	 * @return string Sanitized URL, or '' if it doesn't look like a Google
+	 *                Calendar feed.
+	 */
+	private static function sanitize_calendar_override_url( $ics_url ) {
+		$ics_url = trim( (string) $ics_url );
+		if ( '' === $ics_url ) {
+			return '';
+		}
+
+		$ics_url = esc_url_raw( $ics_url );
+		$host    = wp_parse_url( $ics_url, PHP_URL_HOST );
+
+		if ( ! is_string( $host ) ) {
+			return '';
+		}
+		$host = strtolower( $host );
+
+		if ( ! preg_match( '/(^|\.)calendar\.google\.com$/', $host ) ) {
+			return '';
+		}
+
+		return $ics_url;
 	}
 
 	/**
@@ -167,9 +201,10 @@ class WCAL_Shortcode {
 
 			$location = isset( $event['location'] ) ? $event['location'] : '';
 
-			// Skip repeating the address when it's the same venue as the Mass
-			// right before it — the schedule rotates through the same handful
-			// of churches, so most weeks are a repeat of a location already shown.
+			// Skip repeating the address when it's the same venue as the event
+			// right before it — useful when a schedule rotates through the
+			// same handful of locations, so most rows are a repeat of an
+			// address already shown just above.
 			$display_location = ( '' !== $location && $location === $last_location ) ? '' : $location;
 			$last_location     = $location;
 

@@ -1,5 +1,17 @@
 # Changelog
 
+## 1.1.1
+
+- Renamed the plugin, admin menu, and shortcode to be generic
+  (`[calendar_schedule]`, previously `[mass_schedule]` — the old tag still
+  works as an alias, nothing embedded on an existing page needs to change).
+- Event-noun settings now default to "Event"/"Events" instead of a specific
+  example noun.
+- Hardened the per-shortcode `ics_url` override to only accept
+  `calendar.google.com` URLs, closing a minor SSRF surface (any post author
+  could otherwise point the server at an arbitrary URL via a shortcode
+  attribute, since shortcode content isn't capability-checked at render time).
+
 ## 1.1.0
 
 - Self-updates via GitHub Releases (see [DEVELOPMENT.md](DEVELOPMENT.md#releasing-an-update)).
@@ -8,12 +20,11 @@
 - New `ics_url` shortcode attribute to show a second calendar on the same site.
 - The widget heading is now optional — leave it blank to render with no
   title at all.
-- New settings for the event noun ("Mass"/"Masses" by default) used in the
-  "Next ..." flag and "Show more ..." toggle, since this calendar isn't
-  always for Masses.
+- New settings for the event noun used in the "Next ..." flag and "Show
+  more ..." toggle, since this widget isn't tied to any one kind of event.
 - Generalized defaults for public/multi-site use — a fresh install no
-  longer pre-fills a specific parish's calendar or Czech heading text.
-  Existing installs keep their configuration unchanged.
+  longer pre-fills any site-specific calendar or heading text. Existing
+  installs keep their configuration unchanged via an upgrade routine.
 - Compact type scale and a native `<details>`/`<summary>` "Show more" fold
   for schedules spanning more than one month — no JavaScript.
 - Address line is now de-duplicated when consecutive events share a location.
@@ -23,5 +34,6 @@
 
 ## 1.0.0
 
-- Initial release: `[mass_schedule]` shortcode, ICS parsing, transient
-  caching with a last-known-good fallback, Settings → Mass Schedule.
+- Initial version: shortcode-based rendering of a Google Calendar `.ics`
+  feed, transient caching with a last-known-good fallback, and a Settings
+  page for the calendar URL and display options.

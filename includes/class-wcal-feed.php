@@ -45,7 +45,7 @@ class WCAL_Feed {
 			$resolved_url,
 			array(
 				'timeout'    => 15,
-				'user-agent' => 'WordPress/Mass-Schedule-Plugin',
+				'user-agent' => 'WordPress/Google-Calendar-Schedule-Plugin',
 			)
 		);
 

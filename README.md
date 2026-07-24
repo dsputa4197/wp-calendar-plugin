@@ -1,14 +1,9 @@
-# Mass Schedule (Google Calendar)
+# Google Calendar Schedule
 
-A small WordPress plugin that renders an upcoming events schedule from a
-public Google Calendar as a styled, compact agenda widget — built for
-churches publishing a rotating Mass schedule, but generic enough for any
-"here's our upcoming weekly thing" use case (office hours, recurring
-meetings, a touring schedule, etc.).
-
-It was purpose-built for [czechchurch.org](https://czechchurch.org), whose
-Masses rotate weekly between three cities. The defaults reflect that, but
-nothing about the plugin is specific to it — see [Configuration](#configuration).
+A small WordPress plugin that renders an upcoming-events schedule from a
+public Google Calendar as a styled, compact agenda widget — recurring
+weekly things (classes, meetings, a touring/rotating schedule, office
+hours, whatever), not a full month-grid calendar.
 
 ## Why not just embed Google Calendar?
 
@@ -30,8 +25,9 @@ subscribe in their own calendar app.
 - De-duplicates the address line when consecutive events share the same
   location (useful when a schedule rotates through the same few venues).
 - Configurable accent colors, an optional second-language month label
-  (e.g. "Září · September"), and a `[mass_schedule]` shortcode that can be
-  dropped anywhere.
+  (e.g. "Září · September"), a configurable event noun (so "Next Event" can
+  become "Next Class", "Next Meeting", etc.), and an optional heading — and
+  a `[calendar_schedule]` shortcode that can be dropped anywhere.
 - Self-updates via GitHub Releases — see [DEVELOPMENT.md](DEVELOPMENT.md).
 
 ## Installation
@@ -42,20 +38,20 @@ subscribe in their own calendar app.
 2. In wp-admin: **Plugins → Add New Plugin → Upload Plugin**, choose the
    zip, install, and activate. (Or upload the folder to
    `wp-content/plugins/` via FTP/SFTP and activate from the Plugins list.)
-3. Go to **Settings → Mass Schedule** and paste your calendar's public
+3. Go to **Settings → Calendar Schedule** and paste your calendar's public
    `.ics` URL. In Google Calendar: **Settings and sharing → Integrate
    calendar → "Public address in iCal format"** (the calendar must be set
    to public first, under **Access permissions**).
-4. Add `[mass_schedule]` to any page or post.
+4. Add `[calendar_schedule]` to any page or post.
 
 ## Usage
 
 ```
-[mass_schedule]
+[calendar_schedule]
 ```
 
 Shortcode attributes (all optional — each falls back to the matching
-Settings → Mass Schedule value):
+Settings → Calendar Schedule value):
 
 | Attribute        | Default                  | Description                                                        |
 |-------------------|--------------------------|----------------------------------------------------------------------|
@@ -63,26 +59,25 @@ Settings → Mass Schedule value):
 | `months`          | Settings → Months to fetch ahead | How many months out to fetch/consider.                     |
 | `limit`           | Settings → Max dates to show | Hard cap on events rendered, across all fetched months.            |
 | `initial_months`  | Settings → Months shown before "Show more" | Month buckets rendered expanded by default. |
-| `ics_url`         | Settings → Google Calendar ICS URL | Show a *different* calendar than the site default — lets one page display two schedules. |
+| `ics_url`         | Settings → Google Calendar ICS URL | Show a *different* calendar than the site default — lets one page display two schedules. Must be a `calendar.google.com` URL. |
 
 Example, showing a second calendar further down the same page:
 
 ```
-[mass_schedule title="San Diego" ics_url="https://calendar.google.com/calendar/ical/xyz/public/basic.ics"]
+[calendar_schedule title="Downtown location" ics_url="https://calendar.google.com/calendar/ical/xyz/public/basic.ics"]
 ```
 
 ## Configuration
 
-All of this lives under **Settings → Mass Schedule**:
+All of this lives under **Settings → Calendar Schedule**:
 
 - **Google Calendar ICS URL** — the feed to read from. Required; the widget
   shows a "not configured" notice (visible to admins only) until this is set.
 - **Heading text** — the widget's title. Leave blank to render with no heading.
-- **Event noun (singular/plural)** — this isn't always a Mass schedule. These
-  default to "Mass"/"Masses" and drive the "Next Mass" flag and "Show 3 more
-  Masses" toggle; set them to whatever the calendar actually is ("Class"/
-  "Classes", "Meeting"/"Meetings", ...), or blank the singular to hide the
-  "Next ..." flag entirely.
+- **Event noun (singular/plural)** — drives the "Next ..." flag and "Show 3
+  more ..." toggle. Defaults to "Event"/"Events"; set to whatever the
+  calendar actually is ("Class"/"Classes", "Meeting"/"Meetings", ...), or
+  blank the singular to hide the "Next ..." flag entirely.
 - **Second language for month names** — None / Czech / Spanish / Polish /
   Vietnamese. Renders month dividers like "Září · September" instead of
   just "September".
@@ -91,7 +86,7 @@ All of this lives under **Settings → Mass Schedule**:
   the accent color.
 - **Months shown before "Show more"** — the schedule starts collapsed to
   this many month-groups; the rest fold behind a `<details>` toggle.
-- **Months to fetch ahead**, **Max Mass dates to show** — bounds on how far
+- **Months to fetch ahead**, **Max dates to show** — bounds on how far
   out and how much gets pulled from the feed at all.
 - **Cache duration (hours)** — how long a successful fetch is cached before
   the feed is checked again. A **Refresh now** button forces an immediate
