@@ -41,7 +41,15 @@ class WCAL_Admin {
 		) );
 		register_setting( self::OPTION_GROUP, 'wcal_heading', array(
 			'sanitize_callback' => 'sanitize_text_field',
-			'default'           => 'Mass Schedule',
+			'default'           => 'Upcoming Events',
+		) );
+		register_setting( self::OPTION_GROUP, 'wcal_event_label_singular', array(
+			'sanitize_callback' => 'sanitize_text_field',
+			'default'           => 'Mass',
+		) );
+		register_setting( self::OPTION_GROUP, 'wcal_event_label_plural', array(
+			'sanitize_callback' => 'sanitize_text_field',
+			'default'           => 'Masses',
 		) );
 		register_setting( self::OPTION_GROUP, 'wcal_cache_hours', array(
 			'sanitize_callback' => array( __CLASS__, 'sanitize_positive_int' ),
@@ -145,7 +153,24 @@ class WCAL_Admin {
 					</tr>
 					<tr>
 						<th scope="row"><label for="wcal_heading"><?php esc_html_e( 'Heading text', 'wp-calendar-plugin' ); ?></label></th>
-						<td><input type="text" id="wcal_heading" name="wcal_heading" class="regular-text" value="<?php echo esc_attr( get_option( 'wcal_heading', 'Mass Schedule' ) ); ?>" /></td>
+						<td>
+							<input type="text" id="wcal_heading" name="wcal_heading" class="regular-text" value="<?php echo esc_attr( get_option( 'wcal_heading', 'Upcoming Events' ) ); ?>" />
+							<p class="description"><?php esc_html_e( 'Leave blank to render the schedule with no heading at all.', 'wp-calendar-plugin' ); ?></p>
+						</td>
+					</tr>
+					<tr>
+						<th scope="row"><label for="wcal_event_label_singular"><?php esc_html_e( 'Event noun (singular)', 'wp-calendar-plugin' ); ?></label></th>
+						<td>
+							<input type="text" id="wcal_event_label_singular" name="wcal_event_label_singular" class="regular-text" value="<?php echo esc_attr( get_option( 'wcal_event_label_singular', 'Mass' ) ); ?>" placeholder="Mass" />
+							<p class="description"><?php esc_html_e( 'Used for the "Next ..." flag on the soonest date, e.g. "Next Mass" or "Next Class". Leave blank to hide that flag.', 'wp-calendar-plugin' ); ?></p>
+						</td>
+					</tr>
+					<tr>
+						<th scope="row"><label for="wcal_event_label_plural"><?php esc_html_e( 'Event noun (plural)', 'wp-calendar-plugin' ); ?></label></th>
+						<td>
+							<input type="text" id="wcal_event_label_plural" name="wcal_event_label_plural" class="regular-text" value="<?php echo esc_attr( get_option( 'wcal_event_label_plural', 'Masses' ) ); ?>" placeholder="Masses" />
+							<p class="description"><?php esc_html_e( 'Used in "Show 3 more ..." and the empty-schedule message, e.g. "Masses" or "Classes".', 'wp-calendar-plugin' ); ?></p>
+						</td>
 					</tr>
 					<tr>
 						<th scope="row"><label for="wcal_month_language"><?php esc_html_e( 'Second language for month names', 'wp-calendar-plugin' ); ?></label></th>
@@ -176,7 +201,7 @@ class WCAL_Admin {
 						<th scope="row"><label for="wcal_initial_months"><?php esc_html_e( 'Months shown before "Show more"', 'wp-calendar-plugin' ); ?></label></th>
 						<td>
 							<input type="number" min="1" id="wcal_initial_months" name="wcal_initial_months" class="small-text" value="<?php echo esc_attr( get_option( 'wcal_initial_months', 1 ) ); ?>" />
-							<p class="description"><?php esc_html_e( 'The rest of the fetched months are tucked behind a "Show more Masses" toggle so the widget starts compact.', 'wp-calendar-plugin' ); ?></p>
+							<p class="description"><?php esc_html_e( 'The rest of the fetched months are tucked behind a "Show more" toggle so the widget starts compact.', 'wp-calendar-plugin' ); ?></p>
 						</td>
 					</tr>
 					<tr>
@@ -184,7 +209,7 @@ class WCAL_Admin {
 						<td><input type="number" min="1" id="wcal_months_ahead" name="wcal_months_ahead" class="small-text" value="<?php echo esc_attr( get_option( 'wcal_months_ahead', 6 ) ); ?>" /></td>
 					</tr>
 					<tr>
-						<th scope="row"><label for="wcal_max_events"><?php esc_html_e( 'Max Mass dates to show', 'wp-calendar-plugin' ); ?></label></th>
+						<th scope="row"><label for="wcal_max_events"><?php esc_html_e( 'Max dates to show', 'wp-calendar-plugin' ); ?></label></th>
 						<td><input type="number" min="1" id="wcal_max_events" name="wcal_max_events" class="small-text" value="<?php echo esc_attr( get_option( 'wcal_max_events', 40 ) ); ?>" /></td>
 					</tr>
 					<tr>

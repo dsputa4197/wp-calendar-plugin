@@ -49,7 +49,7 @@ add_action( 'plugins_loaded', 'wcal_init_update_checker' );
  */
 function wcal_activate() {
 	add_option( 'wcal_ics_url', '' );
-	add_option( 'wcal_heading', 'Mass Schedule' );
+	add_option( 'wcal_heading', 'Upcoming Events' );
 	add_option( 'wcal_cache_hours', 3 );
 	add_option( 'wcal_months_ahead', 6 );
 	add_option( 'wcal_max_events', 40 );

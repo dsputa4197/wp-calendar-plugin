@@ -6,6 +6,11 @@
 - New settings: accent color, heading color, second-language month names
   (None/Czech/Spanish/Polish/Vietnamese).
 - New `ics_url` shortcode attribute to show a second calendar on the same site.
+- The widget heading is now optional — leave it blank to render with no
+  title at all.
+- New settings for the event noun ("Mass"/"Masses" by default) used in the
+  "Next ..." flag and "Show more ..." toggle, since this calendar isn't
+  always for Masses.
 - Generalized defaults for public/multi-site use — a fresh install no
   longer pre-fills a specific parish's calendar or Czech heading text.
   Existing installs keep their configuration unchanged.

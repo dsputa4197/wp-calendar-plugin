@@ -59,9 +59,9 @@ Settings → Mass Schedule value):
 
 | Attribute        | Default                  | Description                                                        |
 |-------------------|--------------------------|----------------------------------------------------------------------|
-| `title`           | Settings → Heading text  | Widget heading.                                                    |
+| `title`           | Settings → Heading text  | Widget heading. Pass `title=""` to render with no heading at all.  |
 | `months`          | Settings → Months to fetch ahead | How many months out to fetch/consider.                     |
-| `limit`           | Settings → Max Mass dates | Hard cap on events rendered, across all fetched months.            |
+| `limit`           | Settings → Max dates to show | Hard cap on events rendered, across all fetched months.            |
 | `initial_months`  | Settings → Months shown before "Show more" | Month buckets rendered expanded by default. |
 | `ics_url`         | Settings → Google Calendar ICS URL | Show a *different* calendar than the site default — lets one page display two schedules. |
 
@@ -77,7 +77,12 @@ All of this lives under **Settings → Mass Schedule**:
 
 - **Google Calendar ICS URL** — the feed to read from. Required; the widget
   shows a "not configured" notice (visible to admins only) until this is set.
-- **Heading text** — the widget's title.
+- **Heading text** — the widget's title. Leave blank to render with no heading.
+- **Event noun (singular/plural)** — this isn't always a Mass schedule. These
+  default to "Mass"/"Masses" and drive the "Next Mass" flag and "Show 3 more
+  Masses" toggle; set them to whatever the calendar actually is ("Class"/
+  "Classes", "Meeting"/"Meetings", ...), or blank the singular to hide the
+  "Next ..." flag entirely.
 - **Second language for month names** — None / Czech / Spanish / Polish /
   Vietnamese. Renders month dividers like "Září · September" instead of
   just "September".

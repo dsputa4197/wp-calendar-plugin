@@ -74,6 +74,21 @@ class WCAL_Shortcode {
 			$hidden_event_count += count( $hidden_month['events'] );
 		}
 
+		// Not every calendar this plugin renders is a Mass schedule, so the
+		// noun used in "Next Mass" / "Show 3 more Masses" is configurable.
+		// Leaving the singular blank hides the "Next ..." flag entirely.
+		$singular = trim( (string) get_option( 'wcal_event_label_singular', 'Mass' ) );
+		$plural   = trim( (string) get_option( 'wcal_event_label_plural', 'Masses' ) );
+		$plural   = '' !== $plural ? $plural : 'events';
+
+		$next_label = '' !== $singular
+			/* translators: %s: singular event noun, e.g. "Mass" */
+			? sprintf( __( 'Next %s', 'wp-calendar-plugin' ), $singular )
+			: '';
+		$empty_label = $plural;
+		/* translators: %s: plural event noun, e.g. "Masses" — the %%d becomes a literal %d for a later sprintf() with the count */
+		$show_more_label_tpl = sprintf( __( 'Show %%d more %s', 'wp-calendar-plugin' ), $plural );
+
 		ob_start();
 		include WCAL_PLUGIN_DIR . 'templates/schedule.php';
 		return ob_get_clean();
@@ -94,7 +109,7 @@ class WCAL_Shortcode {
 				<?php
 				printf(
 					/* translators: %s: link to the plugin's settings page */
-					esc_html__( 'Mass Schedule: no calendar is configured yet. %s', 'wp-calendar-plugin' ),
+					esc_html__( 'No calendar is configured yet. %s', 'wp-calendar-plugin' ),
 					'<a href="' . esc_url( admin_url( 'options-general.php?page=wcal-mass-schedule' ) ) . '">' . esc_html__( 'Add your Google Calendar link.', 'wp-calendar-plugin' ) . '</a>'
 				);
 				?>
