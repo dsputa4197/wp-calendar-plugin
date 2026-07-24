@@ -1,0 +1,278 @@
+/*
+ * Colors are pulled straight from czechchurch.org's own computed styles
+ * (body text, nav-link magenta, H2 magenta). The site has no dark mode of
+ * its own, so this deliberately stays a single fixed light theme rather
+ * than switching on prefers-color-scheme — a dark card would clash with
+ * the rest of an always-light page. Override these custom properties from
+ * Avada's "Additional CSS" if the palette ever needs to move.
+ */
+.wcal-schedule {
+	--wcal-ink: #595959;
+	--wcal-ink-soft: #8c8386;
+	--wcal-accent: #9b0177;
+	--wcal-accent-2: #ba3f9d;
+	--wcal-accent-wash: #f8ecf4;
+	--wcal-paper: #ffffff;
+	--wcal-line: #e7e3e4;
+	--wcal-line-strong: #d9d2d4;
+
+	box-sizing: border-box;
+	background: var( --wcal-paper );
+	border: 1px solid var( --wcal-line );
+	color: var( --wcal-ink );
+	font-family: Verdana, Geneva, sans-serif;
+	font-variant-numeric: tabular-nums;
+	max-width: 100%;
+}
+
+.wcal-schedule *,
+.wcal-schedule *::before,
+.wcal-schedule *::after {
+	box-sizing: inherit;
+}
+
+.wcal-schedule .wcal-heading {
+	display: flex;
+	align-items: center;
+	gap: 14px;
+	padding: 20px 22px 12px;
+}
+
+.wcal-schedule .wcal-rule {
+	flex: 1;
+	height: 1px;
+	background: var( --wcal-line-strong );
+}
+
+.wcal-schedule .wcal-heading-title {
+	font-size: 17px;
+	font-weight: 700;
+	color: var( --wcal-accent-2 );
+	white-space: nowrap;
+}
+
+.wcal-schedule .wcal-empty {
+	padding: 0 22px 20px;
+	color: var( --wcal-ink-soft );
+	font-size: 11px;
+}
+
+.wcal-schedule .wcal-month {
+	display: flex;
+	align-items: center;
+	gap: 11px;
+	padding: 14px 22px 3px;
+}
+
+.wcal-schedule .wcal-month .wcal-rule {
+	background: var( --wcal-line );
+}
+
+.wcal-schedule .wcal-month-label {
+	font-size: 9.5px;
+	font-weight: 700;
+	letter-spacing: 0.1em;
+	text-transform: uppercase;
+	color: var( --wcal-ink-soft );
+	white-space: nowrap;
+}
+
+.wcal-schedule .wcal-timeline {
+	position: relative;
+	padding: 2px 22px 6px;
+}
+
+.wcal-schedule .wcal-timeline::before {
+	content: "";
+	position: absolute;
+	left: 38px;
+	top: 2px;
+	bottom: 6px;
+	width: 1px;
+	background: var( --wcal-line-strong );
+}
+
+.wcal-schedule .wcal-row {
+	position: relative;
+	display: flex;
+	gap: 13px;
+	align-items: flex-start;
+	padding: 8px 0;
+}
+
+.wcal-schedule .wcal-row + .wcal-row {
+	border-top: 1px solid var( --wcal-line );
+}
+
+.wcal-schedule .wcal-stub {
+	position: relative;
+	z-index: 1;
+	flex: 0 0 auto;
+	width: 32px;
+	background: var( --wcal-accent );
+	color: #fff;
+	border-radius: 2px;
+	text-align: center;
+	padding: 4px 0 5px;
+}
+
+.wcal-schedule .wcal-dow {
+	display: block;
+	font-size: 7px;
+	font-weight: 700;
+	letter-spacing: 0.06em;
+	text-transform: uppercase;
+	opacity: 0.85;
+}
+
+.wcal-schedule .wcal-day {
+	display: block;
+	font-size: 13px;
+	font-weight: 700;
+	line-height: 1.15;
+}
+
+.wcal-schedule .wcal-mark {
+	display: block;
+	font-size: 6px;
+	opacity: 0.55;
+	margin-top: 1px;
+}
+
+.wcal-schedule .wcal-body {
+	flex: 1;
+	min-width: 0;
+}
+
+.wcal-schedule .wcal-top {
+	display: flex;
+	justify-content: space-between;
+	align-items: baseline;
+	gap: 8px;
+	flex-wrap: wrap;
+}
+
+.wcal-schedule .wcal-city {
+	font-size: 12.5px;
+	font-weight: 700;
+	color: var( --wcal-ink );
+}
+
+.wcal-schedule .wcal-time {
+	flex: 0 0 auto;
+	font-size: 10px;
+	font-weight: 700;
+	color: var( --wcal-accent );
+	background: var( --wcal-accent-wash );
+	border-radius: 20px;
+	padding: 3px 9px;
+	white-space: nowrap;
+}
+
+.wcal-schedule .wcal-address {
+	margin-top: 2px;
+	font-size: 10px;
+	color: var( --wcal-ink-soft );
+	line-height: 1.5;
+}
+
+.wcal-schedule .wcal-next {
+	display: inline-block;
+	font-size: 7.5px;
+	font-weight: 700;
+	letter-spacing: 0.06em;
+	text-transform: uppercase;
+	color: var( --wcal-accent );
+	border: 1px solid var( --wcal-accent );
+	border-radius: 20px;
+	padding: 1px 6px;
+	margin-bottom: 4px;
+}
+
+.wcal-schedule .wcal-foot {
+	display: flex;
+	justify-content: flex-end;
+	padding: 14px 22px 18px;
+	border-top: 1px solid var( --wcal-line );
+}
+
+.wcal-schedule .wcal-subscribe {
+	display: inline-flex;
+	align-items: center;
+	gap: 6px;
+	font-size: 10px;
+	font-weight: 700;
+	color: #fff;
+	background: var( --wcal-accent );
+	border-radius: 3px;
+	padding: 7px 13px;
+	text-decoration: none;
+	letter-spacing: 0.02em;
+}
+
+.wcal-schedule .wcal-subscribe svg {
+	width: 11px;
+	height: 11px;
+}
+
+/* "Show more" fold — native <details>/<summary>, no JS required. */
+.wcal-schedule details.wcal-more {
+	display: block;
+}
+
+.wcal-schedule .wcal-more-toggle {
+	display: flex;
+	align-items: center;
+	gap: 6px;
+	list-style: none;
+	cursor: pointer;
+	padding: 10px 22px;
+	margin-top: 2px;
+	border-top: 1px solid var( --wcal-line );
+	font-size: 10.5px;
+	font-weight: 700;
+	letter-spacing: 0.03em;
+	color: var( --wcal-accent );
+}
+
+.wcal-schedule .wcal-more-toggle::-webkit-details-marker {
+	display: none;
+}
+
+.wcal-schedule .wcal-more-toggle::marker {
+	content: "";
+}
+
+.wcal-schedule .wcal-more-toggle::before {
+	content: "+";
+	display: inline-flex;
+	align-items: center;
+	justify-content: center;
+	width: 13px;
+	height: 13px;
+	border-radius: 50%;
+	border: 1px solid var( --wcal-accent );
+	font-size: 10px;
+	line-height: 1;
+}
+
+.wcal-schedule details.wcal-more[open] > .wcal-more-toggle::before {
+	content: "\2212";
+}
+
+.wcal-schedule .wcal-more-toggle:focus-visible {
+	outline: 2px solid var( --wcal-accent );
+	outline-offset: -2px;
+}
+
+@media ( max-width: 560px ) {
+	.wcal-schedule .wcal-timeline::before {
+		left: 34px;
+	}
+	.wcal-schedule .wcal-stub {
+		width: 28px;
+	}
+	.wcal-schedule .wcal-day {
+		font-size: 12px;
+	}
+}
