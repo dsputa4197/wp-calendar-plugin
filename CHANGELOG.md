@@ -1,5 +1,13 @@
 # Changelog
 
+## 1.1.2
+
+- Fixed the update checker: it was configured to require a manually
+  uploaded zip on every GitHub Release (`enableReleaseAssets()`), which
+  never actually got uploaded — updates would have silently found nothing
+  to install. Now uses GitHub's automatic per-tag source archive instead,
+  so a plain `git tag` + release is enough.
+
 ## 1.1.1
 
 - Renamed the plugin, admin menu, and shortcode to be generic

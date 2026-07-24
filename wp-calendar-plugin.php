@@ -2,7 +2,7 @@
 /**
  * Plugin Name: Google Calendar Schedule
  * Description: Renders an upcoming-events schedule from a public Google Calendar feed via the [calendar_schedule] shortcode.
- * Version: 1.1.1
+ * Version: 1.1.2
  * Author: Daniel Sputa
  * License: GPL-2.0-or-later
  * Text Domain: wp-calendar-plugin
@@ -13,7 +13,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 	exit;
 }
 
-define( 'WCAL_VERSION', '1.1.1' );
+define( 'WCAL_VERSION', '1.1.2' );
 define( 'WCAL_PLUGIN_FILE', __FILE__ );
 define( 'WCAL_PLUGIN_DIR', plugin_dir_path( __FILE__ ) );
 define( 'WCAL_PLUGIN_URL', plugin_dir_url( __FILE__ ) );
@@ -30,14 +30,19 @@ require_once WCAL_PLUGIN_DIR . 'includes/class-wcal-admin.php';
  * Checks GitHub Releases for this repo and shows the normal wp-admin
  * "Update available" notice/one-click-update UI when a new one is tagged.
  * See DEVELOPMENT.md for how to cut a release.
+ *
+ * Deliberately does NOT call ->enableReleaseAssets() — that would require
+ * manually attaching a built zip to every GitHub Release, an easy step to
+ * forget that silently breaks updates if skipped. Without it, PUC downloads
+ * GitHub's own auto-generated source archive for the release's tag, which
+ * always exists and needs no extra step per release.
  */
 function wcal_init_update_checker() {
-	$update_checker = YahnisElsts\PluginUpdateChecker\v5\PucFactory::buildUpdateChecker(
+	YahnisElsts\PluginUpdateChecker\v5\PucFactory::buildUpdateChecker(
 		'https://github.com/dsputa4197/wp-calendar-plugin/',
 		WCAL_PLUGIN_FILE,
 		'wp-calendar-plugin'
 	);
-	$update_checker->getVcsApi()->enableReleaseAssets();
 }
 add_action( 'plugins_loaded', 'wcal_init_update_checker' );
 
